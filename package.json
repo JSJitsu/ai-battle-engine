@@ -1,0 +1,19 @@
+{
+  "name": "ai-battle-engine",
+  "version": "1.0.0",
+  "description": "Engine used by various sites to power the games",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "natedsaint@gmail.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/JSJitsu/ai-battle-engine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JSJitsu/ai-battle-engine/issues"
+  },
+  "homepage": "https://github.com/JSJitsu/ai-battle-engine#readme"
+}
