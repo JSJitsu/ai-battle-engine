@@ -9,7 +9,7 @@ var GameEngine = function(configs) {
 	this.healthWell = require("./lib/game_classes/HealthWell.js");
 	this.hero = require("./lib/game_classes/Hero.js");
 	this.impassable = require("./lib/game_classes/Impassable.js");
-	this.unoccupied = require("./lib/game_classes/Unoccupied.js");	
+	this.unoccupied = require("./lib/game_classes/Unoccupied.js");
 };
 
 GameEngine.prototype.buildConfigs = function(configs) {
@@ -98,9 +98,7 @@ GameEngine.prototype.planAllGames = function(originalUsers) {
       users = originalUsers.slice(),
       maxUsersPerTeam = me.configs.maxUsersPerTeam,
       boardSize = me.configs.boardSize,
-      //Used to look up hero port numbers
       userLookup = {},
-      //Stores all the game objects
       games = [],
       numberOfGames = 0,
       alternateTeams = [],
@@ -112,7 +110,7 @@ GameEngine.prototype.planAllGames = function(originalUsers) {
       thisTeam,
       nextUserIndex,
       nextUser;
-  
+
   //Calculate number of games needed
   numberOfGames = Math.ceil(users.length / maxUsersPerTeam / 2);
 
@@ -122,7 +120,7 @@ GameEngine.prototype.planAllGames = function(originalUsers) {
   for (gameIndex; gameIndex<numberOfGames; gameIndex++) {
     map = me.pickMap();
     game = me.createGameFromMap( __dirname + '/lib/maps/' + map );
-    game.maxTurn = me.configs.maxTurns; 
+    game.maxTurn = me.configs.maxTurns;
     games.push(game);
 
     //Keeps track of which team to add the
@@ -152,9 +150,10 @@ GameEngine.prototype.planAllGames = function(originalUsers) {
     nextUser = users.splice(nextUserIndex, 1)[0];
 
     //Save the user (be able to get the hero port, etc later)
-    userLookup[nextUser.githubHandle] = nextUser;
+    var githubHandle = nextUser.github_login;
+    userLookup[githubHandle] = nextUser;
 
-    console.log('Adding user: ' + nextUser.githubHandle + ' to game ' + currentGameIndex + ', team ' + thisTeam);
+    console.log('Adding user: ' + githubHandle + ' to game ' + currentGameIndex + ', team ' + thisTeam);
 
     //Loops through each game
     if (currentGameIndex < games.length - 1) {
@@ -164,13 +163,13 @@ GameEngine.prototype.planAllGames = function(originalUsers) {
     }
 
     //Put hero at random location in the current game
-    while (!thisGame.addHero(this.randomIndex(boardSize), this.randomIndex(boardSize), nextUser.githubHandle, thisTeam)) {
+    while (!thisGame.addHero(this.randomIndex(boardSize), this.randomIndex(boardSize), githubHandle, thisTeam)) {
       //Keep looping until the hero is successfully added
       //(Since we are choosing random locations, heroes that are added
       // onto occupied squares do nothing and return false, hence the loop)
     }
   }
-  
+
   return {
     games: games,
     userLookup: userLookup
