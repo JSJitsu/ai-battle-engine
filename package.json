@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/JSJitsu/ai-battle-engine/issues"
   },
-  "homepage": "https://github.com/JSJitsu/ai-battle-engine#readme"
+  "homepage": "https://github.com/JSJitsu/ai-battle-engine#readme",
+  "devDependencies": {
+    "chai": "*",
+    "chai-spies": "*",
+    "mocha": "*"
+  }
 }
