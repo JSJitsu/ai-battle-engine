@@ -4,7 +4,7 @@
   "description": "Engine used by various sites to power the games",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "mocha ./test/index.js"
   },
   "author": "natedsaint@gmail.com",
   "license": "MIT",
@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/JSJitsu/ai-battle-engine/issues"
   },
-  "homepage": "https://github.com/JSJitsu/ai-battle-engine#readme"
+  "homepage": "https://github.com/JSJitsu/ai-battle-engine#readme",
+  "devDependencies": {
+    "chai": "*",
+    "chai-spies": "*",
+    "mocha": "*"
+  }
 }
