@@ -4,7 +4,8 @@
   "description": "Engine used by various sites to power the games",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "npm test",
+    "lint": "eslint index.js lib/game_classes/ --fix"
   },
   "author": "natedsaint@gmail.com",
   "license": "MIT",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/JSJitsu/ai-battle-engine/issues"
   },
-  "homepage": "https://github.com/JSJitsu/ai-battle-engine#readme"
+  "homepage": "https://github.com/JSJitsu/ai-battle-engine#readme",
+  "devDependencies": {
+    "eslint": "^3.7.1"
+  }
 }
