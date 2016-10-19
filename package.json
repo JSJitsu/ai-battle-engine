@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm test",
-    "lint": "eslint index.js lib/game_classes/ --fix"
+    "lint": "eslint ./"
   },
   "author": "natedsaint@gmail.com",
   "license": "MIT",
