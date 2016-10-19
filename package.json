@@ -4,7 +4,8 @@
   "description": "Engine used by various sites to power the games",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./test/index.js"
+    "test": "mocha ./test/index.js",
+    "lint": "eslint ./"
   },
   "author": "natedsaint@gmail.com",
   "license": "MIT",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/JSJitsu/ai-battle-engine#readme",
   "devDependencies": {
+    "eslint": "^3.7.1",
     "chai": "*",
     "chai-spies": "*",
     "mocha": "*"
