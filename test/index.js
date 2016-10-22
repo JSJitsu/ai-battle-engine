@@ -26,7 +26,7 @@ describe('Game dependencies exist.', function () {
     });
 
     it('Game.js exists', function () {
-        var game = new Game();
+        var game = new Game(5);
         expect(game).to.be.a('object');
     });
 
@@ -95,20 +95,18 @@ describe('Board methods.', function () {
             expect(board.lengthOfSide).to.equal(5);
         });
 
-        xit('Should handle negative lengths.', function () {
-            var err = new ReferenceError('Instantiate board with a positive integer only.');
+        it('Should handle negative lengths.', function () {
             var fn = function () {
                 var board = new Board(-5);
             };
-            expect(fn).to.throw('Instantiate board with a positive integer only.');
+            expect(fn).to.throw(ReferenceError, 'Instantiate board with a positive integer only.');
         });
 
-        xit('Should handle decimal lengths.', function () {
-            var err = new ReferenceError('Instantiate board with a positive integer only.');
+        it('Should handle decimal lengths.', function () {
             var fn = function () {
                 var board = new Board(1.5);
             };
-            expect(fn).to.throw('Instantiate board with a positive integer only.');
+            expect(fn).to.throw(ReferenceError, 'Instantiate board with a positive integer only.');
         });
 
         it('Board tiles should initially be unoccupied.', function () {
@@ -124,12 +122,12 @@ describe('Board methods.', function () {
 
     describe('ValidCoordinates board method.', function () {
 
-        xit('Should take an X and Y coordinate.', function () {
+        it('Should take an X and Y coordinate.', function () {
             var fn = function () {
                 var board = new Board(4);
                 board.validCoordinates(5);
             };
-            expect(fn).to.throw('Enter 2 parmeters (X,Y).');
+            expect(fn).to.throw('Enter 2 parameters (X,Y).');
         });
 
         it('Should return false if given invalid coordinates.', function () {
@@ -146,12 +144,12 @@ describe('Board methods.', function () {
 
     describe('Get tile nearby board method.', function () {
 
-        xit('Should take an X and Y coordinate.', function () {
+        it('Should take an X and Y coordinate.', function () {
             var fn = function () {
                 var board = new Board(4);
                 board.getTileNearby(5);
             };
-            expect(fn).to.throw('Enter 2 parameters (X,Y).');
+            expect(fn).to.throw('Enter 2 parameters (X,Y) and direction.');
         });
 
         it('Should return a tile when given valid coordinates and direction (West).', function () {
@@ -353,9 +351,9 @@ describe('Board methods.', function () {
             expect(rock.distanceFromLeft).to.equal(0);
         });
 
-        xit('Should have the type of "Rock".', function () {
+        it('Should have the type of "Impassable".', function () {
             var rock = new Impassable(0,0);
-            expect(rock.type).to.equal('Rock');
+            expect(rock.type).to.equal('Impassable');
         });
 
         it('Should not have an initial ID.', function () {
@@ -380,12 +378,14 @@ describe('Board methods.', function () {
 
     });
 
-    xdescribe('Game.js', function () {
+    describe('Game.js', function () {
 
         describe('Game object properties', function () {
-            xit('Should not take any arguments.', function () {
-                var game = new Game(0,0);
-                expect(game).to.throw(error);
+            it('Should not take any arguments.', function () {
+                var funct = function () {
+                    var game = new Game(0,0);
+                };
+                expect(funct).to.throw(ReferenceError, 'Instantiate game with a positive integer only.');
             });
 
             it('Should instantiate a board.', function () {
@@ -416,103 +416,110 @@ describe('Board methods.', function () {
         describe('Game object methods', function () {
 
             it('Should add a hero to the game.', function () {
-                var game = new Game();
-                var hero = game.addHero(0,0);
+                var game = new Game(5);
+                game.addHero(0,0,"David",0,0);
                 expect(game.heroes).to.have.length(1);
             });
 
             it('Should place a hero on the game board.', function () {
-                var game = new Game();
-                var hero1 = game.addHero(0,0);
+                var game = new Game(5);
+                game.addHero(0,0,"David",0,0);
                 expect(game.board.tiles[0][0]).to.have.property('health');
             });
 
             it('Should add a diamond mine to the game.', function () {
-                var game = new Game();
+                var game = new Game(5);
                 var d = game.addDiamondMine(0,0);
                 expect(game.diamondMines).to.have.length(1);
             });
 
             it('Should place a diamond mine on the game board.', function () {
-                var game = new Game();
+                var game = new Game(5);
                 var d = game.addDiamondMine(0,0);
                 expect(game.board.tiles[0][0]).to.have.property('type').that.deep.equals('DiamondMine');
             });
 
             it('Should add a health well to the game.', function () {
-                var game = new Game();
+                var game = new Game(5);
                 var hw = game.addHealthWell(0,0);
                 expect(game.healthWells).to.have.length(1);
             });
 
             it('Should place a health well on the game board.', function () {
-                var game = new Game();
+                var game = new Game(5);
                 var hw = game.addHealthWell(0,0);
                 expect(game.board.tiles[0][0]).to.have.property('type').that.deep.equals('HealthWell');
             });
 
             it('Should add an impassable object to the game.', function () {
-                var game = new Game();
+                var game = new Game(5);
                 var i = game.addImpassable(0,0);
                 expect(game.impassables).to.have.length(1);
             });
 
             it('Should place an impassable object on the game board.', function () {
-                var game = new Game();
+                var game = new Game(5);
                 var i = game.addImpassable(0,0);
-                expect(game.board.tiles[0][0]).to.have.property('type').that.deep.equals('Rock');
-            });
-
-            it('Should know what hero\'s turn it is.', function () {
-                var game = new Game();
-                var h1 = game.addHero(0,0);
-                var h2 = game.addHero(0,1);
-                var h3 = game.addHero(1,0);
-                var h4 = game.addHero(0,2);
-                game.turn = 1;
-                expect(game.activeHero()).to.deep.equal(game.heroes[1]);
+                expect(game.board.tiles[0][0]).to.have.property('type').that.deep.equals('Impassable');
             });
 
             describe('handleHeroTurn method', function () {
 
                 it('Should move the hero.', function () {
-                    var game = new Game();
-                    var h1 = game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(3,3,"Steven",1,1);
                     game.handleHeroTurn('South');
                     expect(game.heroes[0].distanceFromTop).to.equal(1);
                 });
 
                 it('Should not move the hero, if the hero is dead.', function () {
-                    var game = new Game();
-                    var h1 = game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(3,3,"Steven",1,1);
                     game.heroes[0].dead = true;
-                    game.handleHeroTurn('South');
-                    expect(game.heroes[0].distanceFromTop).to.equal(0);
+                    var funct = function () {
+                        game.handleHeroTurn('South');
+                    };
+                    expect(funct).to.throw(Error, 'Dead heroes should never even have turns!');
                 });
 
                 it('Should call the hero earnings method.', function () {
-                    var game = new Game();
-                    var h1 = game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(3,3,"Steven",1,1);
                     game.heroes[0].mineCount = 1;
                     game.handleHeroTurn('South');
                     expect(game.heroes[0].diamondsEarned).to.equal(1);
                 });
 
                 it('Should call the hero attack method.', function () {
-                    var game = new Game();
-                    var h1 = game.addHero(0,0);
-                    game.heroes[0].takeDamage(100);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(2,0,"Steven",1,1);
+                    game.heroes[1].takeDamage(90);
                     game.handleHeroTurn('South');
-                    expect(game.heroes[0].dead).to.equal(true);
+                    expect(game.heroes[1].dead).to.equal(true);
                 });
 
                 it('Should increment the turn.', function () {
-                    var game = new Game();
-                    var h1 = game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(3,3,"Steven",1,1);
                     game.handleHeroTurn('South');
                     game.handleHeroTurn('South');
                     game.handleHeroTurn('South');
                     expect(game.turn).to.equal(3);
+                });
+
+                it('Should know what hero\'s turn it is.', function () {
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(1,1,"Steven",1,1);
+                    game.handleHeroTurn('South');
+                    expect(game.activeHero).to.deep.equal(game.heroes[1]);
+                    game.handleHeroTurn('South');
+                    expect(game.activeHero).to.deep.equal(game.heroes[0]);
                 });
 
             });
@@ -520,30 +527,32 @@ describe('Board methods.', function () {
             describe('Handle hero move', function () {
 
                 it('Should not let the hero move off of the board.', function () {
-                    var game = new Game();
-                    var h1 = game.addHero(0,0);
-                    game.handleHeroTurn('North');
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game._handleHeroMove(game.activeHero,'North');
                     expect(game.heroes[0].distanceFromTop).to.equal(0);
                 });
 
+                // This is kind of an ugly test, but ¯\_(ツ)_/¯
                 it('Should move the hero in the right direction.', function () {
-                    var game = new Game();
-                    var h1 = game.addHero(0,0);
-                    game.handleHeroTurn('South');
-                    game.handleHeroTurn('East');
-                    game.handleHeroTurn('South');
-                    game.handleHeroTurn('East');
-                    game.handleHeroTurn('North');
-                    game.handleHeroTurn('West');
+                    var game = new Game(10);
+                    game.addHero(0,0,"David",0,0);
+                    game._handleHeroMove(game.activeHero,'South');
+                    game._handleHeroMove(game.activeHero,'East');
+                    game._handleHeroMove(game.activeHero,'South');
+                    game._handleHeroMove(game.activeHero,'East');
+                    game._handleHeroMove(game.activeHero,'North');
+                    game._handleHeroMove(game.activeHero,'West');
                     expect(game.heroes[0].distanceFromTop).to.equal(1);
                     expect(game.heroes[0].distanceFromLeft).to.equal(1);
                 });
 
                 it('Should leave the previous tile unoccupied.', function () {
-                    var game = new Game();
-                    var h1 = game.addHero(0,0);
-                    game.handleHeroTurn('South');
-                    expect(game.board.tiles[0][0]).to.deep.equal(new Unoccupied(0,0));
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game._handleHeroMove(game.activeHero, 'South');
+                    expect(game.board.tiles[0][0].type).to.equal('Unoccupied');
+                    expect(game.board.tiles[0][0].subType).to.equal('Unoccupied');
                 });
 
             });
@@ -551,16 +560,18 @@ describe('Board methods.', function () {
             describe('handleHeroEarnings method', function () {
 
                 it('Should increase diamondsEarned based on mineCount.', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(3,3,"Steven",1,1);
                     game.heroes[0].mineCount = 3;
                     game._handleHeroEarnings(game.heroes[0]);
                     expect(game.heroes[0].diamondsEarned).to.equal(3);
                 });
 
                 it('Should not change diamondsEarned if mineCount does not increase.', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(3,3,"Steven",1,1);
                     game._handleHeroEarnings(game.heroes[0]);
                     expect(game.heroes[0].diamondsEarned).to.equal(0);
                 });
@@ -570,8 +581,8 @@ describe('Board methods.', function () {
             describe('handleHeroMove method', function () {
 
                 it('Returns undefined if trying to move off the board.', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
                     var moveOffBoard = game._handleHeroMove(game.heroes[0], 'North');
                     expect(moveOffBoard).to.equal(undefined);
                     moveOffBoard = game._handleHeroMove(game.heroes[0], 'West');
@@ -579,30 +590,30 @@ describe('Board methods.', function () {
                 });
 
                 it('Makes soon-to-be vacated tile "unoccupied".', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
                     game._handleHeroMove(game.heroes[0], 'South');
                     expect(game.board.tiles[0][0].type).to.equal("Unoccupied");
                 });
 
                 it('Updates hero\'s location (in hero)', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
                     game._handleHeroMove(game.heroes[0], 'South');
                     expect(game.heroes[0].distanceFromTop).to.equal(1);
                     expect(game.heroes[0].distanceFromLeft).to.equal(0);
                 });
 
                 it('Updates hero\'s location (on board)', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
                     game._handleHeroMove(game.heroes[0], 'South');
                     expect(game.board.tiles[1][0]).to.equal(game.heroes[0]);
                 });
 
                 it('If hero tries to move on diamond mine he does not move.', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
                     game.addDiamondMine(1,0);
                     game._handleHeroMove(game.heroes[0], 'South');
                     expect(game.heroes[0].distanceFromTop).to.equal(0);
@@ -610,8 +621,8 @@ describe('Board methods.', function () {
                 });
 
                 it('If hero captures mine with enough health he doesn\'t die and is owner of the mine.', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
                     game.addDiamondMine(1,0);
                     game._handleHeroMove(game.heroes[0], 'South');
                     expect(game.heroes[0].dead).to.equal(false);
@@ -619,8 +630,8 @@ describe('Board methods.', function () {
                 });
 
                 it('If hero captures mine with minimal health he dies.', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
                     game.heroes[0].health = 10;
                     game.addDiamondMine(1,0);
                     game._handleHeroMove(game.heroes[0], 'South');
@@ -628,12 +639,12 @@ describe('Board methods.', function () {
                 });
 
                 it('If hero tries to move over a healthwell he will get health and not move.', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
                     game.heroes[0].health = 10;
                     game.addHealthWell(1,0);
                     game._handleHeroMove(game.heroes[0], 'South');
-                    expect(game.heroes[0].health).to.equal(50);
+                    expect(game.heroes[0].health).to.equal(40); // 10 hp + 30 healthwell = 40
                     expect(game.heroes[0].distanceFromTop).to.equal(0);
                     expect(game.heroes[0].distanceFromLeft).to.equal(0);
                 });
@@ -643,26 +654,26 @@ describe('Board methods.', function () {
             describe('resolveHeroAttacks method', function () {
 
                 it('one hero attacks another if in range', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
-                    game.addHero(1,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(1,0,"Steven",1,1);
                     game._resolveHeroAttacks(game.heroes[0]);
-                    expect(game.heroes[1].health).to.equal(70);
+                    expect(game.heroes[1].health).to.equal(80); // 100 hp - 20 dmg = 80 hp
                 });
 
                 it('remove hero from board if dead', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
-                    game.addHero(1,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(1,0,"Steven",1,1);
                     game.heroes[1].health = 1;
                     game._resolveHeroAttacks(game.heroes[0]);
                     expect(game.board.tiles[1][0].type).to.equal('Unoccupied');
                 });
 
                 it('tell hero he killed someone', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
-                    game.addHero(1,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
+                    game.addHero(1,0,"Steven",1,1);
                     game.heroes[1].health = 1;
                     game._resolveHeroAttacks(game.heroes[0]);
                     expect(game.heroes[0].heroesKilled).to.have.length(1);
@@ -673,8 +684,8 @@ describe('Board methods.', function () {
             describe('heroDied method', function () {
 
                 it('removes dead hero from board', function () {
-                    var game = new Game();
-                    game.addHero(0,0);
+                    var game = new Game(5);
+                    game.addHero(0,0,"David",0,0);
                     game.heroDied(game.heroes[0]);
                     expect(game.board.tiles[0][0].type).to.equal('Unoccupied');
                 });
