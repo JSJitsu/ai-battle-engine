@@ -4,7 +4,7 @@
   "description": "Engine used by various sites to power the games",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./test/index.js",
+    "test": "mocha ./test/index.js && npm run lint",
     "lint": "eslint ./"
   },
   "author": "natedsaint@gmail.com",
