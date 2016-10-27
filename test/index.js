@@ -696,4 +696,101 @@ describe('Board methods.', function () {
 
     });
 
+    describe('When the maximum turns have been reached', function () {
+
+        it('The game should end', function () {
+            let game = new Game(5);
+
+            game.maxTurn = 2;
+
+            game.addHero(0, 0, 'Blue Guy', 0);
+            game.addHero(0, 1, 'Red Guy', 1);
+
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+
+            expect(game.ended).to.equal(true);
+        });
+
+    });
+
+    describe('Team 0 should win', function () {
+
+        it('When team 1 has been killed', function () {
+            let game = new Game(5);
+
+            game.addHero(0, 0, 'Blue Guy', 0);
+            game.addHero(0, 1, 'Red Guy', 1);
+
+            game.heroes[1].takeDamage(100);
+
+            game.handleHeroTurn('South');
+
+            expect(game.ended).to.equal(true);
+            expect(game.winningTeam).to.equal(0);
+        });
+
+        it('When they have the most diamonds at game end', function () {
+            let game = new Game(5);
+
+            game.addHero(0, 0, 'Blue Guy', 0);
+            game.addHero(0, 1, 'Red Guy', 1);
+
+            game.addDiamondMine(1, 0);
+
+            game.maxTurn = 4;
+
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+
+            expect(game.ended).to.equal(true);
+            expect(game.winningTeam).to.equal(0);
+        });
+
+    });
+
+    describe('Team 1 should win', function () {
+
+        let game = new Game(5);
+
+        it('When team 0 has been killed', function () {
+
+            game.addHero(0, 0, 'Blue Guy', 0);
+            game.addHero(0, 1, 'Red Guy', 1);
+
+            game.handleHeroTurn('South');
+
+            game.heroes[0].takeDamage(100);
+
+            game.handleHeroTurn('South');
+
+            expect(game.ended).to.equal(true);
+            expect(game.winningTeam).to.equal(1);
+        });
+
+        it('When they have the most diamonds at game end', function () {
+            let game = new Game(5);
+
+            game.addHero(0, 0, 'Blue Guy', 0);
+            game.addHero(0, 1, 'Red Guy', 1);
+
+            game.addDiamondMine(1, 1);
+
+            game.maxTurn = 4;
+
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+
+            expect(game.ended).to.equal(true);
+            expect(game.winningTeam).to.equal(1);
+        });
+
+
+    });
+
 });
