@@ -1,12 +1,15 @@
 {
     "extends": "eslint:recommended",
     "env": {
-        "node": true
+        "node": true,
+        "es6":true
     },
     "parserOptions": {
         "ecmaVersion": 6
     },
     "rules": {
+        "no-var":0,
+        "prefer-arrow-callback":0,
         "no-console": 0,
         "no-unused-vars": 0,
         "prefer-const": 0,
