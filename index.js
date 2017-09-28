@@ -1,7 +1,7 @@
-var fs = require('fs'),
+const fs = require('fs'),
     vm = require('vm');
 
-var GameEngine = function (configs) {
+let GameEngine = (configs) => {
     this.configs = this.buildConfigs(configs);
     this.board = require("./lib/game_classes/Board.js");
     this.diamondMine = require("./lib/game_classes/DiamondMine.js");
@@ -12,8 +12,8 @@ var GameEngine = function (configs) {
     this.unoccupied = require("./lib/game_classes/Unoccupied.js");
 };
 
-GameEngine.prototype.buildConfigs = function (configs) {
-    var config,
+GameEngine.prototype.buildConfigs = (configs) => {
+    let config,
         calculatedConfigs;
 
     calculatedConfigs = {
@@ -31,47 +31,47 @@ GameEngine.prototype.buildConfigs = function (configs) {
     return  calculatedConfigs;
 };
 
-GameEngine.prototype.getBoard = function () {
+GameEngine.prototype.getBoard = () => {
     return this.board;
 };
 
-GameEngine.prototype.getDiamondMine = function () {
+GameEngine.prototype.getDiamondMine = () => {
     return this.diamondMine;
 };
 
-GameEngine.prototype.getGame = function () {
+GameEngine.prototype.getGame = () => {
     return this.game;
 };
 
-GameEngine.prototype.getHealthWell = function () {
+GameEngine.prototype.getHealthWell = () => {
     return this.healthWell;
 };
 
-GameEngine.prototype.getHero = function () {
+GameEngine.prototype.getHero = () => {
     return this.hero;
 };
 
-GameEngine.prototype.getImpassable = function () {
+GameEngine.prototype.getImpassable = () => {
     return this.impassable;
 };
 
-GameEngine.prototype.getUnoccupied = function () {
+GameEngine.prototype.getUnoccupied = () => {
     return this.unoccupied;
 };
 
 // Creates a board from the map in the given file path
-GameEngine.prototype.createGameFromMap = function (mapFilePath){
-    var buffer = fs.readFileSync(mapFilePath),
+GameEngine.prototype.createGameFromMap = (mapFilePath) => {
+    let buffer = fs.readFileSync(mapFilePath),
         Game = this.getGame(),
         game;
-    var map = buffer.toString('utf8');
+    let map = buffer.toString('utf8');
     map = map.split('\n');
-    for (var i = 0; i < map.length; i++){
+    for (let i = 0; i < map.length; i++){
         map[i] = map[i].split('|');
     }
     game = new Game(map.length);
-    for (var j = 0; j < map.length; j++){
-        for (var k = 0; k < map.length; k++){
+    let (let j = 0; j < map.length; j++){
+        for (let k = 0; k < map.length; k++){
             if (map[j][k] === 'DM'){
                 game.addDiamondMine(j,k);
             } else if (map[j][k] === 'HW'){
@@ -90,11 +90,11 @@ GameEngine.prototype.createGameFromMap = function (mapFilePath){
  * @param  {Object} originalUsers value is spliced upon creation
  * @return {Object}               Containing the games and userLookup
  */
-GameEngine.prototype.planAllGames = function (originalUsers) {
+GameEngine.prototype.planAllGames = (originalUsers) => {
 
     console.log('Planning games for ' + originalUsers.length + ' users.');
 
-    var me = this,
+    let me = this,
         users = originalUsers.slice(),
         maxUsersPerTeam = me.configs.maxUsersPerTeam,
         boardSize = me.configs.boardSize,
@@ -150,7 +150,7 @@ GameEngine.prototype.planAllGames = function (originalUsers) {
         nextUser = users.splice(nextUserIndex, 1)[0];
 
         // Save the user (be able to get the hero port, etc later)
-        var githubHandle = nextUser.github_login;
+        let githubHandle = nextUser.github_login;
         userLookup[githubHandle] = nextUser;
 
         console.log('Adding user: ' + githubHandle + ' to game ' + currentGameIndex + ', team ' + thisTeam);
@@ -183,18 +183,18 @@ GameEngine.prototype.planAllGames = function (originalUsers) {
  * @param  {Number} maxExcl Max random number (exclusive)
  * @return {Number}         random number from 0 to max-1
  */
-GameEngine.prototype.randomIndex = function (maxExcl) {
+GameEngine.prototype.randomIndex = (maxExcl) => {
     return Math.floor(Math.random(Date.now()) * maxExcl);
 };
 
-GameEngine.prototype.pickMap = function () {
-    var dir = __dirname + "/lib/maps/",
+GameEngine.prototype.pickMap = () => {
+    let dir = __dirname + "/lib/maps/",
         maps = [];
 
     maps = fs.readdirSync(dir);
 
     if (Array.isArray(maps)) {
-        var map = maps[this.randomIndex(maps.length)];
+        let map = maps[this.randomIndex(maps.length)];
         return map;
     } else {
         return maps;
