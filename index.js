@@ -195,7 +195,7 @@ class GameEngine {
         maps = fs.readdirSync(dir);
 
         if (Array.isArray(maps)) {
-            var map = maps[this.randomIndex(maps.length)];
+            const map = maps[this.randomIndex(maps.length)];
             return map;
         } else {
             return maps;
