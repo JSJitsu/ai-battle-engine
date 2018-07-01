@@ -794,7 +794,7 @@ describe('Board methods.', () => {
 
     describe('When neither team has diamonds', () => {
 
-        it('The team with the most living players should win', () => {
+        it('The team with the most living players should win, test A', () => {
             let game = new Game(5);
 
             game.addHero(0, 0, 'Blue Guy', 0);
@@ -809,6 +809,27 @@ describe('Board methods.', () => {
 
             expect(game.ended).to.equal(true);
             expect(game.winningTeam).to.equal(1);
+        });
+
+        it('The team with the most living players should win, test B', () => {
+            let game = new Game(5);
+
+            game.addHero(4, 0, 'Blue Guy', 0);
+            game.addHero(4, 2, 'Blue Gal', 0);
+            game.addHero(4, 4, 'Blue Gorilla', 0);
+            game.addHero(0, 2, 'Red Guy', 1);
+            game.addHero(0, 4, 'Red Gal', 1);
+
+            game.maxTurn = 5;
+
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+            game.handleHeroTurn('South');
+
+            expect(game.ended).to.equal(true);
+            expect(game.winningTeam).to.equal(0);
         });
 
     });
