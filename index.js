@@ -73,12 +73,27 @@ class GameEngine {
         game = new Game(map.length);
         for (let j = 0; j < map.length; j++) {
             for (let k = 0; k < map.length; k++) {
-                if (map[j][k] === 'DM') {
+                switch (map[j][k]) {
+                case 'DM':
                     game.addDiamondMine(j, k);
-                } else if (map[j][k] === 'HW') {
+                    break;
+                case 'HW':
                     game.addHealthWell(j, k);
-                } else if (map[j][k] === 'IM') {
+                    break;
+                case 'IM':
                     game.addImpassable(j, k);
+                    break;
+                case 'S1':
+                    game.addSpawnPoint(j, k, '1');
+                    break;
+                case 'S2':
+                    game.addSpawnPoint(j, k, '2');
+                    break;
+                case 'SP':
+                    game.addSpawnPoint(j, k, 'A');
+                    break;
+                default:
+                    // Do nothing
                 }
             }
         }
@@ -120,6 +135,9 @@ class GameEngine {
         for (gameIndex; gameIndex < numberOfGames; gameIndex++) {
             map = me.pickMap();
             game = me.createGameFromMap(__dirname + '/lib/maps/' + map);
+            if (!game.hasValidSpawnPoints(me.configs.maxUsersPerTeam)) {
+                throw new Error(`Invalid Spawn Points in Map: ${map}!`);
+            }
             game.maxTurn = me.configs.maxTurns;
             games.push(game);
 
@@ -162,12 +180,22 @@ class GameEngine {
                 currentGameIndex = 0;
             }
 
-            // Put hero at random location in the current game
-            while (!thisGame.addHero(this.randomIndex(boardSize), this.randomIndex(boardSize), githubHandle, thisTeam)) {
-                // Keep looping until the hero is successfully added
-                // (Since we are choosing random locations, heroes that are added
-                // onto occupied squares do nothing and return false, hence the loop)
+            if (thisGame.hasSpawnPointsLeft(thisTeam)) {
+                const spawnPoint = thisGame.getNextSpawnPoint(thisTeam);
+                thisGame.addHero(spawnPoint.distanceFromTop, spawnPoint.distanceFromLeft, githubHandle, thisTeam);
+            } else {
+                // Put hero at random location in the current game
+                while (!thisGame.addHero(this.randomIndex(boardSize), this.randomIndex(boardSize), githubHandle, thisTeam)) {
+                    // Keep looping until the hero is successfully added
+                    // (Since we are choosing random locations, heroes that are added
+                    // onto occupied squares do nothing and return false, hence the loop)
+                }
             }
+        }
+
+        // Free any unused spawn points
+        for (let i = 0; i < games.length; i++) {
+            games[i].flushSpawnPoints();
         }
 
         return {

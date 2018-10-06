@@ -10,6 +10,7 @@ const HealthWell = require('../lib/game_classes/HealthWell.js');
 const Hero = require('../lib/game_classes/Hero.js');
 const Impassable = require('../lib/game_classes/Impassable.js');
 const Unoccupied = require('../lib/game_classes/Unoccupied.js');
+const SpawnPoint = require('../lib/game_classes/SpawnPoint.js');
 chai.use(spies);
 
 describe('Game dependencies exist.', () => {
@@ -48,6 +49,11 @@ describe('Game dependencies exist.', () => {
     it('Unoccupied.js exists', () => {
         let unoccupied = new Unoccupied(0, 0);
         expect(unoccupied).to.be.a('object');
+    });
+
+    it('SpawnPoint.js exists', () => {
+        const spawnPoint = new SpawnPoint(0, 0);
+        expect(spawnPoint).to.be.a('object');
     });
 
 });
@@ -378,6 +384,21 @@ describe('Board methods.', () => {
 
     });
 
+    describe('SpawnPoint.js', () => {
+
+        it('Should take X and Y coordinates.', () => {
+            const spawnPoint = new SpawnPoint(0, 0);
+            expect(spawnPoint.distanceFromTop).to.equal(0);
+            expect(spawnPoint.distanceFromLeft).to.equal(0);
+        });
+
+        it('Should have the type of "SpawnPoint".', () => {
+            let u = new SpawnPoint(0, 0);
+            expect(u.type).to.equal('SpawnPoint');
+        });
+
+    });
+
     describe('Game.js', () => {
 
         describe('Game object properties', () => {
@@ -399,6 +420,9 @@ describe('Board methods.', () => {
                 expect(game.diamondMines).to.have.length(0);
                 expect(game.healthWells).to.have.length(0);
                 expect(game.impassables).to.have.length(0);
+                expect(game.team1SP).to.have.length(0);
+                expect(game.team2SP).to.have.length(0);
+                expect(game.anyTeamSP).to.have.length(0);
             });
 
             it('Should start a game at turn 0.', () => {
@@ -461,6 +485,175 @@ describe('Board methods.', () => {
                 let game = new Game(5);
                 let i = game.addImpassable(0, 0);
                 expect(game.board.tiles[0][0]).to.have.property('type').that.deep.equals('Impassable');
+            });
+
+            it('Should add a spawn point for team 1 object to the game.', () => {
+                const game = new Game(5);
+                game.addSpawnPoint(0, 0, '1');
+                expect(game.team1SP).to.have.length(1);
+            });
+
+            it('Should add a spawn point for team 2 object to the game.', () => {
+                const game = new Game(5);
+                game.addSpawnPoint(0, 0, '2');
+                expect(game.team2SP).to.have.length(1);
+            });
+
+            it('Should add a spawn point for any team object to the game.', () => {
+                const game = new Game(5);
+                game.addSpawnPoint(0, 0, 'A');
+                expect(game.anyTeamSP).to.have.length(1);
+            });
+
+            it('Should place a spawn point for team 1 object on the game board.', () => {
+                const game = new Game(5);
+                game.addSpawnPoint(0, 0, '1');
+                expect(game.board.tiles[0][0]).to.have.property('subType').that.deep.equals('SpawnPoint-1');
+            });
+
+            it('Should place a spawn point for team 2 object on the game board.', () => {
+                const game = new Game(5);
+                game.addSpawnPoint(0, 0, '2');
+                expect(game.board.tiles[0][0]).to.have.property('subType').that.deep.equals('SpawnPoint-2');
+            });
+
+            it('Should place a spawn point for any team object on the game board.', () => {
+                const game = new Game(5);
+                game.addSpawnPoint(0, 0, 'A');
+                expect(game.board.tiles[0][0]).to.have.property('subType').that.deep.equals('SpawnPoint-A');
+            });
+
+            it('Should have spawn points for team 1 via S1.', () => {
+                const game = new Game(5);
+                game.addSpawnPoint(0, 0, '1');
+                // Teams were 0-indexed at this point
+                expect(game.hasSpawnPointsLeft(0)).to.equal(true);
+            });
+
+            it('Should have spawn points for team 1 via SP.', () => {
+                const game = new Game(5);
+                game.addSpawnPoint(0, 0, 'A');
+                // Teams were 0-indexed at this point
+                expect(game.hasSpawnPointsLeft(0)).to.equal(true);
+            });
+
+            it('Should not have spawn points for team 1.', () => {
+                const game = new Game(5);
+                // Teams were 0-indexed at this point
+                expect(game.hasSpawnPointsLeft(0)).to.equal(false);
+            });
+
+            it('Should have spawn points for team 2 via S2.', () => {
+                const game = new Game(5);
+                game.addSpawnPoint(0, 0, '2');
+                // Teams were 0-indexed at this point
+                expect(game.hasSpawnPointsLeft(1)).to.equal(true);
+            });
+
+            it('Should have spawn points for team 2 via SP.', () => {
+                const game = new Game(5);
+                game.addSpawnPoint(0, 0, 'A');
+                // Teams were 0-indexed at this point
+                expect(game.hasSpawnPointsLeft(1)).to.equal(true);
+            });
+
+            it('Should not have spawn points for team 2.', () => {
+                const game = new Game(5);
+                // Teams were 0-indexed at this point
+                expect(game.hasSpawnPointsLeft(1)).to.equal(false);
+            });
+
+            it('Should have valid spawn points. (Team 1)', () => {
+                const game = new Game(5);
+                const maxPlayers = 2;
+                game.addSpawnPoint(0, 0, '1');
+                game.addSpawnPoint(0, 1, '1');
+                expect(game.hasValidSpawnPoints(maxPlayers)).to.equal(true);
+            });
+
+            it('Should have valid spawn points. (Team 1, Any)', () => {
+                const game = new Game(5);
+                const maxPlayers = 2;
+                game.addSpawnPoint(0, 0, '1');
+                game.addSpawnPoint(0, 1, 'A');
+                expect(game.hasValidSpawnPoints(maxPlayers)).to.equal(true);
+            });
+
+            it('Should have valid spawn points. (Team 2)', () => {
+                const game = new Game(5);
+                const maxPlayers = 2;
+                game.addSpawnPoint(1, 0, '2');
+                game.addSpawnPoint(1, 1, '2');
+                expect(game.hasValidSpawnPoints(maxPlayers)).to.equal(true);
+            });
+
+            it('Should have valid spawn points. (Team 2, Any)', () => {
+                const game = new Game(5);
+                const maxPlayers = 2;
+                game.addSpawnPoint(1, 0, '2');
+                game.addSpawnPoint(1, 1, 'A');
+                expect(game.hasValidSpawnPoints(maxPlayers)).to.equal(true);
+            });
+
+            it('Should have valid spawn points. (Any)', () => {
+                const game = new Game(5);
+                const maxPlayers = 2;
+                game.addSpawnPoint(0, 0, 'A');
+                game.addSpawnPoint(0, 1, 'A');
+                game.addSpawnPoint(0, 2, 'A');
+                game.addSpawnPoint(0, 3, 'A');
+                expect(game.hasValidSpawnPoints(maxPlayers)).to.equal(true);
+            });
+
+            it('Should have invalid spawn points. (Team 1)', () => {
+                const game = new Game(5);
+                const maxPlayers = 2;
+                game.addSpawnPoint(0, 0, '1');
+                game.addSpawnPoint(0, 1, '1');
+                game.addSpawnPoint(0, 2, '1');
+                expect(game.hasValidSpawnPoints(maxPlayers)).to.equal(false);
+            });
+
+            it('Should have invalid spawn points. (Team 1, Any)', () => {
+                const game = new Game(5);
+                const maxPlayers = 2;
+                game.addSpawnPoint(0, 0, '1');
+                game.addSpawnPoint(0, 1, 'A');
+                game.addSpawnPoint(0, 2, '1');
+                game.addSpawnPoint(0, 3, 'A');
+                game.addSpawnPoint(0, 4, 'A');
+                expect(game.hasValidSpawnPoints(maxPlayers)).to.equal(false);
+            });
+
+            it('Should have invalid spawn points. (Team 2)', () => {
+                const game = new Game(5);
+                const maxPlayers = 2;
+                game.addSpawnPoint(1, 0, '2');
+                game.addSpawnPoint(1, 1, '2');
+                game.addSpawnPoint(1, 2, '2');
+                expect(game.hasValidSpawnPoints(maxPlayers)).to.equal(false);
+            });
+
+            it('Should have invalid spawn points. (Team 2, Any)', () => {
+                const game = new Game(5);
+                const maxPlayers = 2;
+                game.addSpawnPoint(1, 0, '2');
+                game.addSpawnPoint(1, 1, 'A');
+                game.addSpawnPoint(1, 2, '2');
+                game.addSpawnPoint(1, 3, 'A');
+                game.addSpawnPoint(1, 4, 'A');
+                expect(game.hasValidSpawnPoints(maxPlayers)).to.equal(false);
+            });
+
+            it('Should have invalid spawn points. (Any)', () => {
+                const game = new Game(5);
+                const maxPlayers = 2;
+                game.addSpawnPoint(0, 0, 'A');
+                game.addSpawnPoint(0, 1, 'A');
+                game.addSpawnPoint(0, 2, 'A');
+                game.addSpawnPoint(0, 3, 'A');
+                game.addSpawnPoint(0, 4, 'A');
+                expect(game.hasValidSpawnPoints(maxPlayers)).to.equal(false);
             });
 
             describe('handleHeroTurn method', () => {
