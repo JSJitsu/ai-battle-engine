@@ -79,6 +79,10 @@ class GameEngine {
                     game.addHealthWell(j, k);
                 } else if (map[j][k] === 'IM') {
                     game.addImpassable(j, k);
+                } else if (map[j][k] === 'S1') {
+                    game.addSpawnPoint(j, k, 'S1');
+                } else if (map[j][k] === 'S2') {
+                    game.addSpawnPoint(j, k, 'S2');
                 }
             }
         }
@@ -118,7 +122,9 @@ class GameEngine {
 
         // Create games
         for (gameIndex; gameIndex < numberOfGames; gameIndex++) {
-            map = me.pickMap();
+            do {
+                map = me.pickMap();
+            } while (!me.validateMap(map, maxUsersPerTeam));
             game = me.createGameFromMap(__dirname + '/lib/maps/' + map);
             game.maxTurn = me.configs.maxTurns;
             games.push(game);
@@ -186,6 +192,24 @@ class GameEngine {
 
     randomIndex (maxExcl) {
         return Math.floor(Math.random(Date.now()) * maxExcl);
+    }
+
+    validateMap (map, maxUsersPerTeam) {
+        let hasSpawnPoints = false;
+        let spawnPoints1 = 0;
+        let spawnPoints2 = 0;
+        for (let j = 0; j < map.length; j++){
+            for (let k = 0; k < map.length; k++){
+                if (map[j][k] === 'S1') {
+                    hasSpawnPoints = true;
+                    spawnPoints1++;
+                } else if (map[j][k] === 'S2') {
+                    hasSpawnPoints = true;
+                    spawnPoints2++;
+                }
+            }
+        }
+        return hasSpawnPoints ? (spawnPoints1 >= maxUsersPerTeam && spawnPoints2 >= maxUsersPerTeam) : true;
     }
 
     pickMap () {
