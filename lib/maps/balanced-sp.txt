@@ -1,0 +1,12 @@
+  |  |  |  |  |DM|DM|  |  |  |  |  
+  |IM|IM|IM|IM|IM|IM|IM|IM|IM|IM|  
+S1|  |  |  |  |  |  |  |  |  |  |S2
+  |  |  |HW|SP|  |  |SP|HW|  |  |  
+  |  |  |  |IM|  |  |IM|  |  |  |  
+DM|IM|  |  |  |DM|DM|  |  |  |IM|DM
+DM|IM|  |  |IM|  |  |IM|  |  |IM|DM
+  |  |  |HW|SP|  |  |SP|HW|  |  |  
+  |  |  |  |  |  |  |  |  |  |  |  
+S1|  |  |  |  |DM|DM|  |  |  |  |S2
+  |  |IM|IM|IM|IM|IM|IM|IM|IM|IM|  
+  |  |  |  |  |DM|DM|  |  |  |  |  
