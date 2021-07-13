@@ -1,6 +1,6 @@
 {
   "name": "ai-battle-engine",
-  "version": "1.0.1",
+  "version": "1.1",
   "description": "Engine used by various sites to power the games",
   "main": "index.js",
   "scripts": {
