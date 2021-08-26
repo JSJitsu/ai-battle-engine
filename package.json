@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/JSJitsu/ai-battle-engine#readme",
   "devDependencies": {
-    "eslint": "^3.7.1",
     "chai": "*",
     "chai-spies": "*",
+    "eslint": "^3.7.1",
     "mocha": "*"
   }
 }
